@@ -10,7 +10,6 @@ const processCategoryData = (products) => {
 
   // Count the occurrence of each category
   products.forEach((product) => {
-	console.log("product",product)
     const category = product.category;
     if (categoryCount[category]) {
       categoryCount[category] += 1;
@@ -29,8 +28,6 @@ const processCategoryData = (products) => {
 const CategoryDistributionChart = ({ product }) => {
   // Use processed category data from products or fallback to empty array
   const pieData = processCategoryData(product?.product?.data || []);
-
-  console.log("Data for PieChart:", pieData); // Log data being used in the chart
 
   return (
     <motion.div
@@ -54,7 +51,6 @@ const CategoryDistributionChart = ({ product }) => {
               label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
             >
               {pieData.map((entry, index) => {
-                console.log(`Rendering entry:`, entry); // Log each entry
                 return <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />;
               })}
             </Pie>

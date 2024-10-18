@@ -22,7 +22,6 @@ export const loginUserAction = createAsyncThunk(
             localStorage.setItem("userInfo", JSON.stringify(data));
             return data;
         } catch (error) {
-            console.log("error",error)
             if (!error?.response) {
                 throw error;
             }
@@ -60,7 +59,6 @@ const usersSlices = createSlice({
         });
 
         builder.addCase(loginUserAction.rejected, (state, action) => {
-            console.log("action",action)
             state.loading = false;
             state.appErr = action?.payload;
             state.serverErr = action?.error?.message;

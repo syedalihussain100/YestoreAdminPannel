@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 const Profile = ({ userData }) => {
 	const navigate = useNavigate();
-	console.log("navigate", navigate)
 	const handleLogout = (e) => {
 		e.preventDefault()
 		localStorage.removeItem('userInfo');

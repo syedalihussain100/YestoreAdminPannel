@@ -82,7 +82,6 @@ export default function FullScreenDialog({ open, onClose }) {
         ...values,
         description: cleanDescription,
       }));
-      console.log(...formData.entries());
       formik.resetForm();
     },
   });

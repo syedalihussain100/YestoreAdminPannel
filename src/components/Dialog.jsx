@@ -70,11 +70,12 @@ export default function ScrollDialog({ open, onClose, product }) {
         onSubmit: (values) => {
             const cleanDescription = stripHtmlTags(values.description);
             dispatch(UpdateProductAction({
-                ...values,
-                description: cleanDescription,
+                id: product?._id, // Pass the product ID
+                values: { ...values, description: cleanDescription } // Pass the product details
             }));
             formik.resetForm();
         },
+
     });
 
     const [scroll, setScroll] = React.useState('paper');

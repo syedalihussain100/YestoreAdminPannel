@@ -5,7 +5,6 @@ let storedData = localStorage.getItem("userInfo");
 let token = storedData ? JSON.parse(storedData).token : null;
 
 
-
 //product
 export const ProductListAction = createAsyncThunk(
     "product/get",
@@ -62,7 +61,6 @@ export const CreateProductAction = createAsyncThunk(
                     },
                 }
             );
-            console.log("data", data)
             return data;
         } catch (error) {
             if (!error?.response) {
@@ -88,7 +86,6 @@ export const DeleteProductAction = createAsyncThunk(
                     },
                 }
             );
-            console.log("data", data)
             return data;
         } catch (error) {
             if (!error?.response) {
@@ -104,44 +101,44 @@ export const DeleteProductAction = createAsyncThunk(
 // update product
 export const UpdateProductAction = createAsyncThunk(
     "product/update",
-    async (id, { title, description, price, brand, category, quantity, address, images }, { rejectWithValue }) => {
+    async ({ id, values }, { rejectWithValue }) => {
         const formData = new FormData();
 
         // Add product details to form data
-        formData.append("title", title);
-        formData.append("description", description);
-        formData.append("price", price);
-        formData.append("brand", brand);
-        formData.append("category", category);
-        formData.append("quantity", quantity);
-        formData.append("address", address);
+        formData.append("title", values.title);
+        formData.append("description", values.description);
+        formData.append("price", values.price);
+        formData.append("brand", values.brand);
+        formData.append("category", values.category);
+        formData.append("quantity", values.quantity);
+        formData.append("address", values.address);
 
         // Append each image file
-        images.forEach((image) => {
+        values.images.forEach((image) => {
             formData.append("images", image);
         });
 
         try {
             const { data } = await axios.put(
-                `https://italybackend2.onrender.com/api/v1/product/${id}`,
+                `http://localhost:3000/api/v1/product/${id}`,
                 formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        "Authorization": token
+                        "Authorization": token  // Corrected Authorization header
                     },
                 }
             );
-            console.log(data)
             return data;
         } catch (error) {
             if (!error?.response) {
                 throw new Error("Network error. Please check your connection.");
             }
-            return rejectWithValue(error?.response?.data?.message || "Something went wrong while creating the product.");
+            return rejectWithValue(error?.response?.data?.message || "Something went wrong while updating the product.");
         }
     }
 );
+
 
 
 
