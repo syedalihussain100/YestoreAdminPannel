@@ -7,6 +7,7 @@ import UsersTable from "../components/users/UsersTable";
 import UserGrowthChart from "../components/users/UserGrowthChart";
 import UserActivityHeatmap from "../components/users/UserActivityHeatmap";
 import UserDemographicsChart from "../components/users/UserDemographicsChart";
+import { useSelector } from "react-redux";
 
 const userStats = {
 	totalUsers: 152845,
@@ -16,6 +17,7 @@ const userStats = {
 };
 
 const UsersPage = () => {
+	const users = useSelector((state) => state?.auth?.users);
 	return (
 		<div className='flex-1 overflow-auto relative z-10'>
 			<Header title='Users' />
@@ -31,7 +33,7 @@ const UsersPage = () => {
 					<StatCard
 						name='Total Users'
 						icon={UsersIcon}
-						value={userStats.totalUsers.toLocaleString()}
+						value={users?.length}
 						color='#6366F1'
 					/>
 					<StatCard name='New Users Today' icon={UserPlus} value={userStats.newUsersToday} color='#10B981' />
