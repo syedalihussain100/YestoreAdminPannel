@@ -17,6 +17,8 @@ const UsersTable = () => {
 
 	const [searchTerm, setSearchTerm] = useState("");
 	const [filteredUsers, setFilteredUsers] = useState([]);
+	const [editingUserId, setEditingUserId] = useState(null);
+	const [editedRole, setEditedRole] = useState("");
 
 	// Update filteredUsers whenever users data changes or search term changes
 	useEffect(() => {
@@ -38,6 +40,22 @@ const UsersTable = () => {
 
 		dispatch(getUserAction())
 	}
+
+	const handleEditClick = (user) => {
+		setEditingUserId(user._id); // Start editing the selected user
+		setEditedRole(user.role); // Initialize the role value
+	};
+
+	const handleRoleChange = (e) => {
+		setEditedRole(e.target.value);
+	};
+
+	const handleUpdate = async (id) => {
+		// Dispatch an action to update the user role
+		// await dispatch(updateUserAction({ id, role: editedRole }));
+		dispatch(getUserAction()); // Refresh users after update
+		setEditingUserId(null); // Exit edit mode after update
+	};
 
 	return (
 		<motion.div
@@ -128,9 +146,20 @@ const UsersTable = () => {
 											<div className="text-sm text-gray-300">{user?.email}</div>
 										</td>
 										<td className="px-6 py-4 whitespace-nowrap">
-											<span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-800 text-blue-100">
-												{user?.role}
-											</span>
+											{editingUserId === user._id ? (
+												<select
+													value={editedRole}
+													onChange={handleRoleChange}
+													className="bg-gray-700 text-white px-2 py-1 rounded"
+												>
+													<option value="admin">Admin</option>
+													<option value="user">User</option>
+												</select>
+											) : (
+												<span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-800 text-blue-100">
+													{user?.role}
+												</span>
+											)}
 										</td>
 
 										<td className="px-6 py-4 whitespace-nowrap">
@@ -145,10 +174,25 @@ const UsersTable = () => {
 										</td>
 
 										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-											<button className="text-indigo-400 hover:text-indigo-300 mr-2">
-												Edit
-											</button>
-											<button onClick={(id) => handleDelete(user?._id)} className="text-red-400 hover:text-red-300">
+											{editingUserId === user._id ? (
+												<button
+													onClick={() => handleUpdate(user._id)}
+													className="text-green-400 hover:text-green-300 mr-2"
+												>
+													Update
+												</button>
+											) : (
+												<button
+													onClick={() => handleEditClick(user)}
+													className="text-indigo-400 hover:text-indigo-300 mr-2"
+												>
+													Edit
+												</button>
+											)}
+											<button
+												onClick={() => handleDelete(user?._id)}
+												className="text-red-400 hover:text-red-300"
+											>
 												Delete
 											</button>
 										</td>
