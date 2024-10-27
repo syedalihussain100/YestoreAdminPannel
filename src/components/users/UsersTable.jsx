@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserAction, DeleteUserAction } from "../../store/AuthSlice/Auth";
+import { getUserAction, DeleteUserAction, UpdateRoleAction } from "../../store/AuthSlice/Auth";
 import Loading from "../users/Loading";
 
 const UsersTable = () => {
@@ -42,8 +42,8 @@ const UsersTable = () => {
 	}
 
 	const handleEditClick = (user) => {
-		setEditingUserId(user._id); // Start editing the selected user
-		setEditedRole(user.role); // Initialize the role value
+		setEditingUserId(user._id); 
+		setEditedRole(user.role); 
 	};
 
 	const handleRoleChange = (e) => {
@@ -51,10 +51,9 @@ const UsersTable = () => {
 	};
 
 	const handleUpdate = async (id) => {
-		// Dispatch an action to update the user role
-		// await dispatch(updateUserAction({ id, role: editedRole }));
-		dispatch(getUserAction()); // Refresh users after update
-		setEditingUserId(null); // Exit edit mode after update
+		await dispatch(UpdateRoleAction({ id, role: editedRole }));
+		dispatch(getUserAction()); 
+		setEditingUserId(null); 
 	};
 
 	return (

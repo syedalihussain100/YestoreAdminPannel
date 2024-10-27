@@ -3,6 +3,7 @@ import axios from "axios";
 
 let storedData = localStorage.getItem("userInfo");
 let token = storedData ? JSON.parse(storedData).token : null;
+console.log("token", token)
 
 //Login
 export const loginUserAction = createAsyncThunk(
@@ -42,8 +43,8 @@ export const getUserAction = createAsyncThunk(
                 `https://italybackend2.onrender.com/api/v1/users`,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data",
-                        "Authorization": token  // Corrected Authorization header
+                        "Content-Type": "application/json",
+                        "Authorization": token
                     },
                 }
             );
@@ -58,6 +59,29 @@ export const getUserAction = createAsyncThunk(
 );
 
 // edit Role users change
+export const UpdateRoleAction = createAsyncThunk(
+    "user/update-role",
+    async ({ id, role }, { rejectWithValue }) => {
+        try {
+            const { data } = await axios.put(
+                `http://localhost:3000/api/v1/update-role/${id}`,
+                { role },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": token
+                    },
+                }
+            );
+            return data;
+        } catch (error) {
+            if (!error.response) {
+                throw new Error("Network error. Please check your connection.");
+            }
+            return rejectWithValue(error.response.data.message || "Something went wrong while updating the user role.");
+        }
+    }
+);
 
 
 // delete users
@@ -158,6 +182,23 @@ const usersSlices = createSlice({
             state.serverErr = action?.error?.message;
         });
 
+        // update user role
+        builder.addCase(UpdateRoleAction.pending, (state, action) => {
+            state.loading = true;
+        });
+
+        builder.addCase(UpdateRoleAction.fulfilled, (state, action) => {
+            state.Updateuser = action?.payload;
+            state.loading = false;
+            state.appErr = undefined;
+            state.serverErr = undefined;
+        });
+
+        builder.addCase(UpdateRoleAction.rejected, (state, action) => {
+            state.loading = false;
+            state.appErr = action?.payload;
+            state.serverErr = action?.error?.message;
+        });
     },
 });
 
